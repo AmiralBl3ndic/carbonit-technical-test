@@ -1,0 +1,7 @@
+C​ - 4 - 5
+# Invalid because two mountains are on the same tile of the terrain
+M​ - 1 - 0
+M​ - 1 - 0
+T​ - 0 - 3 - 2
+T​ - 1 - 3 - 3
+A​ - Lara - 1 - 1 - S - AADADAGGA

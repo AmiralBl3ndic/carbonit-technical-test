@@ -9,11 +9,22 @@ module.exports = {
   coverageDirectory: 'coverage',
 
   // An array of regexp pattern strings used to skip coverage collection
-  coveragePathIgnorePatterns: ['node_modules/'],
+  coveragePathIgnorePatterns: ['node_modules'],
 
   // Indicates which provider should be used to instrument code for coverage
   coverageProvider: 'v8',
 
-  // The test environment that will be used for testing
-  // testEnvironment: 'node',
+  transform: {
+    '^.+\\.ts?$': 'ts-jest',
+  },
+
+  roots: ['<rootDir>'],
+
+  modulePaths: ['<rootDir>', 'node_modules'],
+
+  moduleDirectories: ['node_modules'],
+
+  moduleNameMapper: {
+    '^@/(.*)': '<rootDir>/src/$1',
+  },
 };

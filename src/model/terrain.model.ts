@@ -24,8 +24,13 @@ class Terrain {
   }
 
   // eslint-disable-next-line no-unused-vars
-  static parse(_fileName: string): Terrain {
-    return new Terrain(1, 1);
+  static parse(terrainString: string): Terrain {
+    throw new Error('Not implemented');
+  }
+
+  // eslint-disable-next-line no-unused-vars
+  static parseFile(fileName: string): Terrain {
+    throw new Error('Not implemented');
   }
 }
 

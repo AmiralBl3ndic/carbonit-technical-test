@@ -194,7 +194,7 @@ describe('Terrain', () => {
       expect(parsed).toContainEqual(expectedMountain);
     });
 
-    it('should throw error when parsing invalid lines', () => {
+    it('should throw error when parsing invalid line type', () => {
       const invalidLine = 'Z - 1 - 1';
 
       expect(() => {
@@ -204,6 +204,65 @@ describe('Terrain', () => {
           `Unable to parse terrain tile with data: "${invalidLine}"`,
         ),
       );
+    });
+
+    it('should throw error when parsing line with too much information', () => {
+      const terrainLine = 'C - 3 - 4 - 1 - 2';
+      const treasureLine = 'T - 3 - 4 - 2 - 1 - 3';
+      const mountainLine = 'M - 1 - 1 - 2 - 3';
+      const adventurerLine =
+        'A - Indiana - 1 - 1 - S - AADADA - shouldcauseerror';
+
+      expect(() => {
+        parseLine(terrainLine);
+      }).toThrowError(
+        new TerrainError('Too much information for terrain definition'),
+      );
+
+      expect(() => {
+        parseLine(treasureLine);
+      }).toThrowError(
+        new TerrainError('Too much information for tile of type treasure'),
+      );
+
+      expect(() => {
+        parseLine(mountainLine);
+      }).toThrowError(
+        new TerrainError('Too much information for tile of type mountain'),
+      );
+
+      expect(() => {
+        parseLine(adventurerLine);
+      }).toThrowError(new TerrainError('Too much information for adventurer'));
+    });
+
+    it('should throw error when parsing line with too few information', () => {
+      const terrainLine = 'C - 3';
+      const treasureLine = 'T - 3 - 4';
+      const mountainLine = 'M - 1';
+      const adventurerLine = 'A - Indiana - 1 - 1 - S';
+
+      expect(() => {
+        parseLine(terrainLine);
+      }).toThrowError(
+        new TerrainError('Too few information for terrain definition'),
+      );
+
+      expect(() => {
+        parseLine(treasureLine);
+      }).toThrowError(
+        new TerrainError('Too few information for tile of type treasure'),
+      );
+
+      expect(() => {
+        parseLine(mountainLine);
+      }).toThrowError(
+        new TerrainError('Too few information for tile of type mountain'),
+      );
+
+      expect(() => {
+        parseLine(adventurerLine);
+      }).toThrowError(new TerrainError('Too few information for adventurer'));
     });
   });
 });

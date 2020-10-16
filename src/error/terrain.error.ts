@@ -1,7 +1,12 @@
-class TerrainError extends Error {
+class TerrainError {
+  message: string;
+
+  name: string;
+
   constructor(message: string) {
-    super(message);
+    this.message = message;
     this.name = 'TerrainError';
+    (Error as any).captureStackTrace(this, TerrainError);
   }
 }
 

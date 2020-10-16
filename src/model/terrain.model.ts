@@ -34,7 +34,7 @@ class Terrain {
   }
 
   // eslint-disable-next-line no-unused-vars
-  private static parseLine(terrainLine: string): Tile {
+  private static parseLine(terrainLine: string): Terrain | Tile[] {
     throw new Error('Not implemented');
   }
 }

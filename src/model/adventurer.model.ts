@@ -1,6 +1,9 @@
 import Action from '@/model/action.enum';
 import Orientation from '@/model/orientation.enum';
 
+/**
+ * Represents an adventurer
+ */
 class Adventurer {
   name: string;
 

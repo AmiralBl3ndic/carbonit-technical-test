@@ -1,5 +1,9 @@
+import AdventurerError from '@/error/adventurer.error';
 import TerrainError from '@/error/terrain.error';
 import Tile from '@/model/tile.model';
+import Action, { parseAction } from '@/model/action.enum';
+import Adventurer from '@/model/adventurer.model';
+import Orientation, { parseOrientation } from '@/model/orientation.enum';
 
 /**
  * Model to represent and hold the map's data
@@ -35,7 +39,7 @@ class Terrain {
   }
 
   // eslint-disable-next-line no-unused-vars
-  private static parseLine(terrainLine: string): Terrain | Tile[] {
+  private static parseLine(terrainLine: string): Terrain | Tile[] | Adventurer {
     const [lineType, ...terrainData] = terrainLine.trim().split(' - ');
 
     switch (lineType) {
@@ -120,7 +124,29 @@ class Terrain {
         if (terrainData.length > 5)
           throw new TerrainError('Too much information for adventurer');
 
-        return [];
+        const adventurerName = terrainData[0];
+        const initialX = Number.parseInt(terrainData[1], 10);
+        const initialY = Number.parseInt(terrainData[2], 10);
+
+        if (!/[NSEO]/.test(terrainData[3]))
+          throw new AdventurerError('Unparsable orientation');
+
+        const orientation: Orientation = parseOrientation(terrainData[3]);
+
+        if (!/^[ADG]+$/.test(terrainData[4]))
+          throw new AdventurerError(
+            `Invalid actions/directions sequence for adventurer ${adventurerName}: ${terrainData[4]}`,
+          );
+
+        const actions: Action[] = terrainData[4].split('').map(parseAction);
+
+        return new Adventurer(
+          adventurerName,
+          initialX,
+          initialY,
+          orientation,
+          actions,
+        );
       }
 
       default: {

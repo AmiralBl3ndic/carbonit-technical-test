@@ -24,7 +24,7 @@ describe('Terrain', () => {
 
     it('should accept valid terrains with comments', () => {
       const terrainString =
-        'C​ - 3 - 4# This is a comment\nM​ - 1 - 0\nM​ - 2 - 1\nT​ - 0 - 3 - 2\nT​ - 1 - 3 - 3\nA​ - Lara - 1 - 1 - S - AADADAGGA\n';
+        'C​ - 3 - 4\n# This is a comment\nM​ - 1 - 0\nM​ - 2 - 1\nT​ - 0 - 3 - 2\nT​ - 1 - 3 - 3\nA​ - Lara - 1 - 1 - S - AADADAGGA\n';
 
       expect(() => {
         Terrain.parse(terrainString);
@@ -168,7 +168,7 @@ describe('Terrain', () => {
       const parsed = parseLine(terrainLine);
 
       expect(parsed).toBeInstanceOf(Terrain);
-      expect(parsed).toBe(expectedTerrain);
+      expect(parsed).toStrictEqual(expectedTerrain);
     });
 
     it('should parse treasures lines right', () => {

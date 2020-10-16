@@ -1,4 +1,7 @@
 import TerrainError from '@/error/terrain.error';
+import Action from '@/model/action.enum';
+import Adventurer from '@/model/adventurer.model';
+import Orientation from '@/model/orientation.enum';
 import Terrain from '@/model/terrain.model';
 import Tile from '@/model/tile.model';
 
@@ -192,6 +195,30 @@ describe('Terrain', () => {
       expect(parsed).not.toBeInstanceOf(Terrain);
       expect(parsed).toHaveLength(1);
       expect(parsed).toContainEqual(expectedMountain);
+    });
+
+    it('should parse adventurer lines right', () => {
+      const adventurerLine = 'A - Indiana - 1 - 2 - E - ADADAAGA';
+      const expectedAdventurer = new Adventurer(
+        'Indiana',
+        1,
+        2,
+        Orientation.EAST,
+        [
+          Action.MOVE_FORWARD,
+          Action.TURN_RIGHT,
+          Action.MOVE_FORWARD,
+          Action.TURN_RIGHT,
+          Action.MOVE_FORWARD,
+          Action.MOVE_FORWARD,
+          Action.TURN_LEFT,
+          Action.MOVE_FORWARD,
+        ],
+      );
+      const parsed = parseLine(adventurerLine);
+
+      expect(parsed).not.toBeInstanceOf(Terrain);
+      expect(parsed).toStrictEqual(expectedAdventurer);
     });
 
     it('should throw error when parsing invalid line type', () => {

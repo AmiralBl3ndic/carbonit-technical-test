@@ -1,3 +1,4 @@
+import * as fs from 'fs';
 import AdventurerError from '@/error/adventurer.error';
 import TerrainError from '@/error/terrain.error';
 import Tile from '@/model/tile.model';
@@ -115,7 +116,11 @@ class Terrain {
 
   // eslint-disable-next-line no-unused-vars
   static parseFile(fileName: string): Terrain {
-    throw new Error('Not implemented');
+    if (!fs.existsSync(fileName)) {
+      throw new Error(`No such file or directory: ${fileName}`);
+    }
+
+    return Terrain.parse(fs.readFileSync(fileName, 'utf-8'));
   }
 
   /// /////////////////////////////////////////////////////////

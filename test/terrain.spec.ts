@@ -157,7 +157,7 @@ describe('Terrain', () => {
     it('should reject invalid file paths', () => {
       expect(() => {
         Terrain.parseFile('data/file-that-does-not-exist.terrain');
-      }).toThrowError('no such file or directory');
+      }).toThrowError('No such file or directory');
     });
   });
 

@@ -1,9 +1,9 @@
-C​ - 3 - 4
+C - 3 - 4
 # There are 2 mountains in total on this terrain
-M​ - 1 - 0
-M​ - 2 - 1
+M - 1 - 0
+M - 2 - 1
 # There are 5 treasures in total on this terrain
-T​ - 0 - 3 - 2
-T​ - 1 - 3 - 3
+T - 0 - 3 - 2
+T - 1 - 3 - 3
 # Lara is an adventurer
-A​ - Lara - 1 - 1 - S - AADADAGGA
+A - Lara - 1 - 1 - S - AADADAGGA

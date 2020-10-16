@@ -1,8 +1,8 @@
 enum Orientation {
-  N = 'N',
-  S = 'S',
-  E = 'E',
-  W = 'O',
+  NORTH = 'N',
+  SOUTH = 'S',
+  EAST = 'E',
+  WEST = 'O',
 }
 
 export default Orientation;

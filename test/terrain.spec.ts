@@ -9,7 +9,7 @@ describe('Terrain', () => {
   describe('.parse()', () => {
     it('should accept valid terrains', () => {
       const terrainString =
-        'C​ - 3 - 4\nM​ - 1 - 0\nM​ - 2 - 1\nT​ - 0 - 3 - 2\nT​ - 1 - 3 - 3\nA​ - Lara - 1 - 1 - S - AADADAGGA\n';
+        'C - 3 - 4\nM - 1 - 0\nM - 2 - 1\nT - 0 - 3 - 2\nT - 1 - 3 - 3\nA - Lara - 1 - 1 - S - AADADAGGA\n';
 
       expect(() => {
         Terrain.parse(terrainString);
@@ -18,16 +18,16 @@ describe('Terrain', () => {
 
     it('should reject invalid terrains', () => {
       const terrainString =
-        'C​ - 4 - 5\nM​ - 1 - 0\nM​ - 1 - 0\nT​ - 0 - 3 - 2\nT​ - 1 - 3 - 3\nA​ - Lara - 1 - 1 - S - AADADAGGA\n';
+        'C - 4 - 5\nM - 1 - 0\nM - 1 - 0\nT - 0 - 3 - 2\nT - 1 - 3 - 3\nA - Lara - 1 - 1 - S - AADADAGGA\n';
 
       expect(() => {
         Terrain.parse(terrainString);
-      }).toThrowError(new TerrainError('Invalid terrain'));
+      }).toThrowError(TerrainError);
     });
 
     it('should accept valid terrains with comments', () => {
       const terrainString =
-        'C​ - 3 - 4\n# This is a comment\nM​ - 1 - 0\nM​ - 2 - 1\nT​ - 0 - 3 - 2\nT​ - 1 - 3 - 3\nA​ - Lara - 1 - 1 - S - AADADAGGA\n';
+        'C - 3 - 4\n# This is a comment\nM - 1 - 0\nM - 2 - 1\nT - 0 - 3 - 2\nT - 1 - 3 - 3\nA - Lara - 1 - 1 - S - AADADAGGA\n';
 
       expect(() => {
         Terrain.parse(terrainString);
@@ -36,7 +36,7 @@ describe('Terrain', () => {
 
     it('should place the mountains right', () => {
       const terrainString =
-        'C​ - 3 - 4\nM​ - 1 - 0\nM​ - 2 - 1\nT​ - 0 - 3 - 2\nT​ - 1 - 3 - 3\nA​ - Lara - 1 - 1 - S - AADADAGGA\n';
+        'C - 3 - 4\nM - 1 - 0\nM - 2 - 1\nT - 0 - 3 - 2\nT - 1 - 3 - 3\nA - Lara - 1 - 1 - S - AADADAGGA\n';
 
       const terrain = Terrain.parse(terrainString);
 
@@ -61,7 +61,7 @@ describe('Terrain', () => {
 
     it('should place the treasures right', () => {
       const terrainString =
-        'C​ - 3 - 4\nM​ - 1 - 0\nM​ - 2 - 1\nT​ - 0 - 3 - 2\nT​ - 1 - 3 - 3\nA​ - Lara - 1 - 1 - S - AADADAGGA\n';
+        'C - 3 - 4\nM - 1 - 0\nM - 2 - 1\nT - 0 - 3 - 2\nT - 1 - 3 - 3\nA - Lara - 1 - 1 - S - AADADAGGA\n';
 
       const terrain = Terrain.parse(terrainString);
 
@@ -101,22 +101,22 @@ describe('Terrain', () => {
 
     it('should specify why an invalid terrain is invalid', () => {
       const sameTileMountainsTerrainString =
-        'C​ - 4 - 5\nM​ - 1 - 0\nM​ - 1 - 0\nT​ - 0 - 3 - 2\nT​ - 1 - 3 - 3\nA​ - Lara - 1 - 1 - S - AADADAGGA\n';
+        'C - 4 - 5\nM - 1 - 0\nM - 1 - 0\nT - 0 - 3 - 2\nT - 1 - 3 - 3\nA - Lara - 1 - 1 - S - AADADAGGA\n';
 
       const multipleDimensionsTerrainString =
-        'C​ - 4 - 5\nC​ - 10 - 10\nM​ - 1 - 0\nT​ - 0 - 3 - 2\nT​ - 1 - 3 - 3\nA​ - Lara - 1 - 1 - S - AADADAGGA\n';
+        'C - 4 - 5\nC - 10 - 10\nM - 1 - 0\nT - 0 - 3 - 2\nT - 1 - 3 - 3\nA - Lara - 1 - 1 - S - AADADAGGA\n';
 
       const treasureOnMountainTerrainString =
-        'C​ - 4 - 5\nM​ - 1 - 0\nM​ - 2 - 1\nT​ - 0 - 3 - 2\nT​ - 2 - 1 - 3\nA​ - Lara - 1 - 1 - S - AADADAGGA\n';
+        'C - 4 - 5\nM - 1 - 0\nM - 2 - 1\nT - 0 - 3 - 2\nT - 2 - 1 - 3\nA - Lara - 1 - 1 - S - AADADAGGA\n';
 
       const adventurerStartsOnMountainTerrainString =
-        'C​ - 3 - 4\nM​ - 1 - 0\nM​ - 2 - 1\nT​ - 0 - 3 - 2\nT​ - 1 - 3 - 3\nA​ - Lara - 1 - 0 - S - AADADAGGA\n';
+        'C - 3 - 4\nM - 1 - 0\nM - 2 - 1\nT - 0 - 3 - 2\nT - 1 - 3 - 3\nA - Lara - 1 - 0 - S - AADADAGGA\n';
 
       const adventurerStartsOutsideOfBoundariesTerrainString =
-        'C​ - 3 - 4\nM​ - 1 - 0\nM​ - 2 - 1\nT​ - 0 - 3 - 2\nT​ - 1 - 3 - 3\nA​ - Lara - -1 - 10 - S - AADADAGGA\n';
+        'C - 3 - 4\nM - 1 - 0\nM - 2 - 1\nT - 0 - 3 - 2\nT - 1 - 3 - 3\nA - Lara - -1 - 10 - S - AADADAGGA\n';
 
       const unrecognizedTileTerrainString =
-        'C​ - 4 - 5\nZ - 1 - 0\nM​ - 1 - 0\nT​ - 0 - 3 - 2\nT​ - 1 - 3 - 3\nA​ - Lara - 1 - 1 - S - AADADAGGA\n';
+        'C - 4 - 5\nZ - 1 - 0\nM - 1 - 0\nT - 0 - 3 - 2\nT - 1 - 3 - 3\nA - Lara - 1 - 1 - S - AADADAGGA\n';
 
       expect(() => {
         Terrain.parse(sameTileMountainsTerrainString);

@@ -32,6 +32,11 @@ class Terrain {
   static parseFile(fileName: string): Terrain {
     throw new Error('Not implemented');
   }
+
+  // eslint-disable-next-line no-unused-vars
+  private static parseLine(terrainLine: string): Tile {
+    throw new Error('Not implemented');
+  }
 }
 
 export default Terrain;

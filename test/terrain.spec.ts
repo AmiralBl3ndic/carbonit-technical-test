@@ -100,6 +100,9 @@ describe('Terrain', () => {
       const sameTileMountainsTerrainString =
         'C​ - 4 - 5\nM​ - 1 - 0\nM​ - 1 - 0\nT​ - 0 - 3 - 2\nT​ - 1 - 3 - 3\nA​ - Lara - 1 - 1 - S - AADADAGGA\n';
 
+      const multipleDimensionsTerrainString =
+        'C​ - 4 - 5\nC​ - 10 - 10\nM​ - 1 - 0\nT​ - 0 - 3 - 2\nT​ - 1 - 3 - 3\nA​ - Lara - 1 - 1 - S - AADADAGGA\n';
+
       const treasureOnMountainTerrainString =
         'C​ - 4 - 5\nM​ - 1 - 0\nM​ - 2 - 1\nT​ - 0 - 3 - 2\nT​ - 2 - 1 - 3\nA​ - Lara - 1 - 1 - S - AADADAGGA\n';
 
@@ -109,9 +112,16 @@ describe('Terrain', () => {
       const adventurerStartsOutsideOfBoundariesTerrainString =
         'C​ - 3 - 4\nM​ - 1 - 0\nM​ - 2 - 1\nT​ - 0 - 3 - 2\nT​ - 1 - 3 - 3\nA​ - Lara - -1 - 10 - S - AADADAGGA\n';
 
+      const unrecognizedTileTerrainString =
+        'C​ - 4 - 5\nZ - 1 - 0\nM​ - 1 - 0\nT​ - 0 - 3 - 2\nT​ - 1 - 3 - 3\nA​ - Lara - 1 - 1 - S - AADADAGGA\n';
+
       expect(() => {
         Terrain.parse(sameTileMountainsTerrainString);
       }).toThrowError(new TerrainError('Multiple mountains on same tile'));
+
+      expect(() => {
+        Terrain.parse(multipleDimensionsTerrainString);
+      }).toThrowError(new TerrainError('Mismatching terrain dimensions data'));
 
       expect(() => {
         Terrain.parse(treasureOnMountainTerrainString);
@@ -125,6 +135,12 @@ describe('Terrain', () => {
         Terrain.parse(adventurerStartsOutsideOfBoundariesTerrainString);
       }).toThrowError(
         new TerrainError('Adventurer starts out of terrain boundaries'),
+      );
+
+      expect(() => {
+        Terrain.parse(unrecognizedTileTerrainString);
+      }).toThrowError(
+        new TerrainError('Unable to parse terrain tile with data: "Z - 1 - 0"'),
       );
     });
   });
@@ -142,5 +158,52 @@ describe('Terrain', () => {
     });
   });
 
-  describe('.parseLine()', () => {});
+  describe('.parseLine()', () => {
+    // eslint-disable-next-line prefer-destructuring, dot-notation, prefer-destructuring
+    const parseLine = Terrain['parseLine'];
+
+    it('should parse terrain lines right', () => {
+      const terrainLine = 'C - 3 - 4';
+      const expectedTerrain = new Terrain(3, 4);
+      const parsed = parseLine(terrainLine);
+
+      expect(parsed).toBeInstanceOf(Terrain);
+      expect(parsed).toBe(expectedTerrain);
+    });
+
+    it('should parse treasures lines right', () => {
+      const treasureLine = 'T - 0 - 3 - 2';
+      const expectedTiles: Tile[] = [
+        { type: 'treasure', x: 0, y: 3 },
+        { type: 'treasure', x: 0, y: 3 },
+      ];
+      const parsed = parseLine(treasureLine);
+
+      expect(parsed).not.toBeInstanceOf(Terrain);
+      expect(parsed).toHaveLength(2);
+      expect(parsed).toStrictEqual(expect.arrayContaining(expectedTiles));
+    });
+
+    it('should parse mountains lines right', () => {
+      const mountainLine = 'M - 1 - 1';
+      const expectedMountain: Tile = { type: 'mountain', x: 1, y: 1 };
+      const parsed = parseLine(mountainLine);
+
+      expect(parsed).not.toBeInstanceOf(Terrain);
+      expect(parsed).toHaveLength(1);
+      expect(parsed).toContainEqual(expectedMountain);
+    });
+
+    it('should throw error when parsing invalid lines', () => {
+      const invalidLine = 'Z - 1 - 1';
+
+      expect(() => {
+        parseLine(invalidLine);
+      }).toThrowError(
+        new TerrainError(
+          `Unable to parse terrain tile with data: "${invalidLine}"`,
+        ),
+      );
+    });
+  });
 });

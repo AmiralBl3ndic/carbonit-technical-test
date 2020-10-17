@@ -54,6 +54,14 @@ class Adventurer {
     this.actions.shift();
   }
 
+  pickupTreasure(): void {
+    this.treasures += 1;
+  }
+
+  get hasNextMove(): boolean {
+    return !!this.actions.length;
+  }
+
   get coords(): AdventurerCoords {
     return [this.x, this.y, this.orientation];
   }

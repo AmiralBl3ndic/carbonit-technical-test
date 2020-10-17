@@ -98,6 +98,104 @@ class Terrain {
     return Terrain.parse(fs.readFileSync(fileName, 'utf-8'));
   }
 
+  /**
+   * Run adventurers moves and stop when none can move anymore
+   */
+  run(): void {
+    while (this.hasAdventurersToMove) {
+      this.moveAdventurers();
+    }
+  }
+
+  /**
+   * Make all adventurers attempt to move and collect treasures once
+   */
+  moveAdventurers(): void {
+    this.adventurers.forEach((adventurer) => {
+      if (!adventurer.hasNextMove) return;
+
+      if (this.isAdventurerMovePossible(adventurer)) {
+        adventurer.move();
+
+        const foundTreasure = this.lookForTreasure(adventurer);
+        if (foundTreasure) {
+          this.removeTreasure(foundTreasure);
+          adventurer.pickupTreasure();
+        }
+      } else {
+        adventurer.skipMove();
+      }
+    });
+  }
+
+  /**
+   * Determine if an adventurer can perform its next move
+   * @param adventurer Adventurer to determine move possibility for
+   */
+  isAdventurerMovePossible(adventurer: Adventurer): boolean {
+    const [nextX, nextY] = adventurer.nextCoords;
+    return (
+      this.areCoordsWithinBounds(nextX, nextY) &&
+      !this.areCoordsMountain(nextX, nextY) &&
+      !this.isNextPositionOccupiedByAnotherAdventurer(adventurer)
+    );
+  }
+
+  /**
+   * Determine if coordinates are within bounds of the terrain
+   * @param x
+   * @param y
+   */
+  areCoordsWithinBounds(x: number, y: number): boolean {
+    return x >= 0 && y >= 0 && x < this.width && y < this.height;
+  }
+
+  /**
+   * Determine if coordinates correspond to a mountain
+   * @param x
+   * @param y
+   */
+  areCoordsMountain(x: number, y: number): boolean {
+    return this.mountains.some((m) => m.x === x && m.y === y);
+  }
+
+  /**
+   * Determine if next coordinates of adventurer are already occupied by another adventurer
+   * @param adventurer Adventurer to check for
+   */
+  isNextPositionOccupiedByAnotherAdventurer(adventurer: Adventurer): boolean {
+    const [nextX, nextY] = adventurer.nextCoords;
+    return this.adventurers.some(
+      (a) => a.name !== adventurer.name && a.x === nextX && a.y === nextY,
+    );
+  }
+
+  lookForTreasure(adventurer: Adventurer): Tile | null {
+    const [x, y] = adventurer.coords;
+    return this.treasures.reduce(
+      (foundTreasure: Tile | null, treasure: Tile) => {
+        return treasure.x === x && treasure.y === y ? treasure : foundTreasure;
+      },
+      null,
+    );
+  }
+
+  removeTreasure(treasure: Tile): void {
+    let removed = false;
+    this.treasures = this.treasures.filter((t) => {
+      if (!removed && t.x === treasure.x && t.y === treasure.y) {
+        removed = true;
+        return false;
+      }
+
+      return true;
+    });
+  }
+
+  get hasAdventurersToMove(): boolean {
+    return this.adventurers.some((a) => a.hasNextMove);
+  }
+
   /// /////////////////////////////////////////////////////////
   //  PRIVATE STATIC METHODS
   // //////////////////////////////////////////////////////////

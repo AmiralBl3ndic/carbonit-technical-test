@@ -54,50 +54,26 @@ class Terrain {
           throw new TerrainError('Mismatching terrain dimensions data');
         terrain = parsed;
       } else if (parsed instanceof Array) {
+        // Either mountain or treasure
+
+        // Mountain
         if (parsed[0].type === 'mountain') {
-          // Check if no mountain already occupies this spot
-          if (mountains.some((m) => m.x === parsed[0].x && m.y === parsed[0].y))
-            throw new TerrainError('Multiple mountains on same tile');
-
-          // Check if no treasure already occupies this spot
-          if (treasures.some((t) => t.x === parsed[0].x && t.y === parsed[0].y))
-            throw new TerrainError('Treasure on a mountain tile');
-
-          // Check if no aventurer already occupies this spot
-          if (
-            adventurers.some((a) => a.x === parsed[0].x && a.y === parsed[0].y)
-          )
-            throw new TerrainError('Adventurer starts on a mountain');
+          Terrain.checkTileAvailabilityForMountain(
+            parsed[0],
+            mountains,
+            treasures,
+            adventurers,
+          );
 
           mountains.push(parsed[0]);
         } else {
-          // Check if no mountain already occupies this spot
-          if (mountains.some((m) => m.x === parsed[0].x && m.y === parsed[0].y))
-            throw new TerrainError('Treasure on a mountain tile');
+          // Treasure
+          Terrain.checkTileAvailabilityForTreasure(parsed[0], mountains);
 
           treasures.push(...parsed);
         }
       } else {
-        // A terrain is required to determine if adventurer coordinates are OK
-        if (!terrain) {
-          throw new TerrainError(
-            'Found adventurer declaration before terrain declaration',
-          );
-        }
-
-        // Check if adventurer is spawned within terrain boundaries
-        if (
-          parsed.x < 0 ||
-          parsed.y < 0 ||
-          parsed.x >= terrain.width ||
-          parsed.y >= terrain.height
-        ) {
-          throw new TerrainError('Adventurer starts out of terrain boundaries');
-        }
-
-        // Check if adventurer starts on a mountain
-        if (mountains.some((m) => m.x === parsed.x && m.y === parsed.y))
-          throw new TerrainError('Adventurer starts on a mountain');
+        Terrain.checkTileAvailabilityForAdventurer(parsed, terrain, mountains);
 
         adventurers.push(parsed);
       }
@@ -114,7 +90,6 @@ class Terrain {
     return terrain;
   }
 
-  // eslint-disable-next-line no-unused-vars
   static parseFile(fileName: string): Terrain {
     if (!fs.existsSync(fileName)) {
       throw new Error(`No such file or directory: ${fileName}`);
@@ -265,6 +240,84 @@ class Terrain {
       orientation,
       actions,
     );
+  }
+
+  /**
+   * Checks if the tile requested to place a new mountain is available
+   * @param newMountain New mountain tile to place
+   * @param mountains Already placed mountain tiles
+   * @param treasures Already placed treasure tiles
+   * @param adventurers Already placed adventurers
+   * @throws {TerrainError} with precise message of reason when the tile is not available.
+   */
+  private static checkTileAvailabilityForMountain(
+    newMountain: Tile,
+    mountains: Tile[],
+    treasures: Tile[],
+    adventurers: Adventurer[],
+  ): void {
+    // Check if no mountain already occupies this spot
+    if (mountains.some((m) => m.x === newMountain.x && m.y === newMountain.y))
+      throw new TerrainError('Multiple mountains on same tile');
+
+    // Check if no treasure already occupies this spot
+    if (treasures.some((t) => t.x === newMountain.x && t.y === newMountain.y))
+      throw new TerrainError('Treasure on a mountain tile');
+
+    // Check if no aventurer already occupies this spot
+    if (adventurers.some((a) => a.x === newMountain.x && a.y === newMountain.y))
+      throw new TerrainError('Adventurer starts on a mountain');
+  }
+
+  /**
+   * Checks if the tile requested to place a new treasure is available
+   * @param newTreasure New treasure to place
+   * @param mountains Already placed mountain tiles
+   * @throws {TerrainError} with precise message of reason when the tile is not available.
+   */
+  private static checkTileAvailabilityForTreasure(
+    newTreasure: Tile,
+    mountains: Tile[],
+  ): void {
+    // Check if no mountain already occupies this spot
+    if (mountains.some((m) => m.x === newTreasure.x && m.y === newTreasure.y))
+      throw new TerrainError('Treasure on a mountain tile');
+  }
+
+  /**
+   *
+   * @param newAdventurer New adventurer to place
+   * @param terrain Terrain to place the adventurer on
+   * @param mountains List of mountains on the terrai
+   * @throws {TerrainError} with precise message of reason when the tile is not available.
+   */
+  private static checkTileAvailabilityForAdventurer(
+    newAdventurer: Adventurer,
+    terrain: Terrain | null,
+    mountains: Tile[],
+  ): void {
+    // A terrain is required to determine if adventurer coordinates are OK
+    if (!terrain) {
+      throw new TerrainError(
+        'Found adventurer declaration before terrain declaration',
+      );
+    }
+
+    // Check if adventurer is spawned within terrain boundaries
+    if (
+      newAdventurer.x < 0 ||
+      newAdventurer.y < 0 ||
+      newAdventurer.x >= terrain.width ||
+      newAdventurer.y >= terrain.height
+    ) {
+      throw new TerrainError('Adventurer starts out of terrain boundaries');
+    }
+
+    // Check if adventurer starts on a mountain
+    if (
+      mountains.some((m) => m.x === newAdventurer.x && m.y === newAdventurer.y)
+    )
+      throw new TerrainError('Adventurer starts on a mountain');
   }
 }
 

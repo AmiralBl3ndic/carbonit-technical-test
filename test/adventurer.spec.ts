@@ -105,4 +105,22 @@ describe('Adventurer', () => {
       new AdventurerError('Cannot move adventurer to negative coordinates'),
     );
   });
+
+  it('is possible to skip a move on demand', () => {
+    adventurer = new Adventurer('Indiana Jones', 0, 0, Orientation.NORTH, [
+      Action.MOVE_FORWARD, // This would cause a move to negative coordinates
+      Action.TURN_RIGHT,
+    ]);
+
+    const initialCoords = adventurer.coords;
+    const initialNextCoords = adventurer.nextCoords;
+
+    // We do not attempt to move since this would cause an error
+    // Hence, we must skip the first move
+    adventurer.skipMove();
+
+    expect(adventurer.coords).toStrictEqual(initialCoords);
+    expect(adventurer.nextCoords).not.toStrictEqual(initialNextCoords);
+    expect(adventurer.nextCoords[2]).toBe(Orientation.EAST);
+  });
 });

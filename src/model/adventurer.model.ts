@@ -47,7 +47,15 @@ class Adventurer {
     [this.x, this.y, this.orientation] = this.nextCoords;
 
     // Get rid of action
+    this.skipMove();
+  }
+
+  skipMove(): void {
     this.actions.shift();
+  }
+
+  get coords(): AdventurerCoords {
+    return [this.x, this.y, this.orientation];
   }
 
   /**

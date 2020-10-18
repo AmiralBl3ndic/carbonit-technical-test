@@ -3,7 +3,7 @@
     "target": "es5",
     "lib": ["ES2017"],
     "module": "commonjs",
-    "outDir": "./dist",
+    "outDir": "./build",
     "rootDir": "./",
     "strict": true,
     "paths": {

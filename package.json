@@ -6,7 +6,8 @@
   "license": "MIT",
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
-    "start": "tsc && node build/",
+    "prestart": "tsc -p tsconfig.build.json",
+    "start": "node build/",
     "start:dev": "ts-node src/",
     "test": "jest",
     "test:coverage": "jest --coverage",
@@ -34,6 +35,6 @@
     "typescript": "^4.0.3"
   },
   "_moduleAliases": {
-    "@": "dist/src"
+    "@": "build"
   }
 }

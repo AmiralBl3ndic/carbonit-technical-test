@@ -120,6 +120,10 @@ class Adventurer {
 
     return [x, y, orientation];
   }
+
+  toResultString(): string {
+    return `A - ${this.name} - ${this.x} - ${this.y} - ${this.orientation} - ${this.treasures}\n`;
+  }
 }
 
 export default Adventurer;

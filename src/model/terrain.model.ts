@@ -98,6 +98,40 @@ class Terrain {
     return Terrain.parse(fs.readFileSync(fileName, 'utf-8'));
   }
 
+  saveResultToFile(fileName: string): void {
+    const mountainsAsString = this.mountains.reduce(
+      (mountainsResult: string, m: Tile) => {
+        return `${mountainsResult}M - ${m.x} - ${m.y}\n`;
+      },
+      '',
+    );
+
+    // Reduce treasures
+    const treasuresMap = new Map<Tile, number>();
+    // Group treasures by location
+    this.treasures.forEach((t) => {
+      treasuresMap.set(t, (treasuresMap.get(t) || 0) + 1);
+    });
+
+    const treasuresAsString = Array.from(treasuresMap).reduce(
+      (treasuresResult: string, [tile, count]: [Tile, number]) => {
+        return `${treasuresResult}T - ${tile.x} - ${tile.y} - ${count}\n`;
+      },
+      '',
+    );
+
+    const adventurersAsString = this.adventurers.reduce(
+      (adventurersResult: string, adventurer: Adventurer) => {
+        return `${adventurersResult}${adventurer.toResultString()}`;
+      },
+      '',
+    );
+
+    const resultString = `C - ${this.width} - ${this.height}\n${mountainsAsString}${treasuresAsString}${adventurersAsString}`;
+
+    fs.writeFileSync(fileName, resultString);
+  }
+
   /**
    * Run adventurers moves and stop when none can move anymore
    */

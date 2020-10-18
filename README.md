@@ -29,3 +29,6 @@ This project took a lot more lines of code than I thought and while I was develo
 This was my first time actually writing unit tests in the context of a project with TDD, this was an interesting and challenging experience.
 
 A lot more tests could be added but I wanted to finish the project on time and had to do a tradeoff on testing to focus more on developing the required features.
+
+At the moment, when the program tries to parse an invalid terrain file, it will throw an error describing why the terrain file is invalid.
+In the future it could be a good idea to prevent this crashing behaviour by intercepting errors and only displaying a nice message to the user rather than the whole stacktrace.

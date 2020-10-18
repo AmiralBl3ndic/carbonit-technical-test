@@ -5,8 +5,8 @@
   "author": "Camille Briand <camille.briand@efrei.net> (https://camillebriand.fr/)",
   "license": "MIT",
   "scripts": {
-    "build": "tsc",
-    "start": "tsc && node dist/src/",
+    "build": "tsc -p tsconfig.build.json",
+    "start": "tsc && node build/",
     "start:dev": "ts-node src/",
     "test": "jest",
     "test:coverage": "jest --coverage",
